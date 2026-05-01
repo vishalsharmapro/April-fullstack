@@ -1,0 +1,23 @@
+*{
+    background: rgb(204, 214, 214);
+}
+
+h1{
+    color: black;
+}
+
+.subheading{
+    color: blueviolet;
+}
+#submit{
+    background-color: rgb(83, 83, 172);
+    color: white;
+}
+.btn{
+    cursor: pointer;
+}
+.click{
+    background: tomato;
+    color: azure;
+    cursor: pointer;
+}
