@@ -1,0 +1,9 @@
+{
+  "Movies": [
+    { "id": "1", "title": "Gader", "views": 1000 },
+    { "id": "2", "title": "Border", "views": 2000 }
+  ],
+"Users":[
+    {"id":"1","Name":"Vishal Kumar","Gender":"Male","Email":"vishalsharma.pro@gmail.com","Password":"123456"}
+]
+}
