@@ -3,10 +3,81 @@ const carousaImages=["https://static.vecteezy.com/system/resources/previews/011/
     "https://juksun.com/wp-content/uploads/2023/02/Fighter-Movie-Poster-4.jpg"
 ];
 const carousalContainer=document.getElementById("carousal-container");
+let currentslide=0;
+let allMovies=[];
+const moviesContainer=document.getElementById("movies-container");
+
+async function getMoviesData(){
+    try{
+    const response=await fetch("http://localhost:3000/movies")
+    allMovies=await response.json();
+   displayMovies(allMovies);
+}catch(err){
+    console.log(err)
+}
+
+}
+
+
+function displayMovies(movies=allMovies){
+    if(!moviesContainer){
+        console.log("Movie container is missing");
+        return;
+    }
+    if(!movies || movies.length==0){
+        moviesContainer.innerHTML="<p>NO Movies Found</p>"
+    
+}
+movies.forEach((movie=> {
+    const card=document.createElement("div");
+  card.className="movie-card";
+  card.innerHTML=`
+  <div class="movie-poster">
+  <img src=${movie.poster} alt=${movie.title} class="movie-poster-img">
+  </div>
+   <div class="movie-info">
+     <div class="movie-title">${movie.title}</div>
+       <div class="movie-year">${movie.year}</div>
+         <div class="movie-category">${movie.Category}</div>
+         <div class="movie-rating">${movie.rating}⭐</div>
+         <div class="movie-buttons">
+         <button class="btn btn-cart">🛒Cart
+         </button>
+          <button class="btn btn-favourite">❤️Favourite
+         </button>
+         </div>
+  </div>
+    `
+    moviesContainer.appendChild(card);
+
+    
+
+    
+}))
+
+}
+const loggedInUser= JSON.parse(localStorage.getItem("loggedInUser"));
+const authSection=document.getElementById("auth-section");
+if(loggedInUser){
+    console.log(loggedInUser)
+     authSection.innerHTML=`
+     <span class="user-name">${loggedInUser.name}</span>
+     <button onclick="logoutUser()" class="nav-btn btn-logout">Logout</button>
+  `
+  
+}
+  function logoutUser(){  
+   localStorage.removeItem("loggedInUser");
+   location.reload();
+  }
+
+
+
 function initCarousal(){
     console.log("My Carousal");
     carousaImages.forEach((imageUrl,index)=>{
         const slide=document.createElement("div");
+        slide.className="carousal-slide"
          if(index==0){
         slide.classList.add("active");
       }
@@ -18,4 +89,29 @@ function initCarousal(){
 
     })
 }
-initCarousal()
+function updateCarousal(){
+    const slides=document.querySelectorAll(".carousal-slide");
+  
+    slides.forEach((slide,index)=>{
+        console.log(slide,"slide",index)
+        if (index===currentslide){
+            
+            slide.classList.add("active")
+        }else{
+            slide.classList.remove("active")
+        }
+    })
+}
+function autoNext(){
+currentslide=(currentslide+1)%carousaImages.length;
+updateCarousal()
+}
+function changesslide(direction){
+    
+   currentslide=(currentslide+direction+carousaImages.length)%carousaImages.length;
+   console.log(currentslide,"currentslide");
+   updateCarousal();
+}
+getMoviesData()
+setInterval(autoNext,2000);
+initCarousal();
